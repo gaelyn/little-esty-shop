@@ -107,4 +107,8 @@ RSpec.describe "Merchant Dashboard" do
       expect(page).not_to have_content(@item_5.name)
     end
   end
+
+  it 'can see link to merchant discount page' do
+    expect(page).to have_link('My Bulk Discounts', href: "/merchant/#{@merchant.id}/bulk_discounts")
+  end
 end
