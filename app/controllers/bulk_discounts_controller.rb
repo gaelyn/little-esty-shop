@@ -2,7 +2,18 @@ class BulkDiscountsController < ApplicationController
   def index
     @merchant = Merchant.find(params[:merchant_id])
     @discounts = BulkDiscount.all
+    if Rails.env.test?
+      # Mock data to avoid API throttling limits
+      @holidays = ["Memorial Day", "Independence Day", "Labor Day"]
+    else
+      @holidays = HolidayService.get_holidays.take(3)
+    end
   end
+
+  # def index
+  #   @merchant = Merchant.find(params[:merchant_id])
+  #   @discounts = BulkDiscount.all
+  # end
 
   def show
 
@@ -23,6 +34,12 @@ class BulkDiscountsController < ApplicationController
       flash[:error] = "Please fill in all fields. #{error_message(discount.errors)}."
       redirect_to "/merchant/#{@merchant.id}/bulk_discounts/new"
     end
+  end
+
+  def destroy
+    @merchant = Merchant.find(params[:merchant_id])
+    BulkDiscount.destroy(params[:id])
+    redirect_to "/merchant/#{@merchant.id}/bulk_discounts"
   end
 
   private
