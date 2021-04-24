@@ -54,7 +54,7 @@ class BulkDiscountsController < ApplicationController
     @discount = BulkDiscount.find(params[:id])
 
     if (params[:bulk_discount][:percentage] != "") && (params[:bulk_discount][:minimum_quantity] != "")
-      @discount.update!(bulk_discount_params)
+      @discount.update(bulk_discount_params)
       redirect_to "/merchant/#{@merchant.id}/bulk_discounts/#{@discount.id}"
     else
       flash[:error] = "Please fill in all fields."
