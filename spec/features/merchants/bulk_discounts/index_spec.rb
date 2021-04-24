@@ -18,5 +18,27 @@ RSpec.describe 'Bulk Discount Index Page' do
         expect(page).to have_link("See Discount", href: "/merchant/#{@merchant.id}/bulk_discounts/#{@discount_1.id}")
       end
     end
+
+    it 'can see upcoming holidays header' do
+      expect(page).to have_content(HolidayService.get_holidays[0])
+      expect(page).to have_content(HolidayService.get_holidays[1])
+      expect(page).to have_content(HolidayService.get_holidays[2])
+    end
+
+    it 'can see link to create a new discount' do
+      expect(page).to have_link("Create New Discount", href: "/merchant/#{@merchant.id}/bulk_discounts/new")
+      click_link('Create New Discount')
+      expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant.id))
+    end
+
+    it 'can submit a form to create a new discount' do
+      click_link "Create New Discount"
+
+      fill_in "Percentage", with: 0.50
+      fill_in "Minimum quantity", with: 5
+      click_button "Create Bulk discount"
+
+      expect(current_path).to eq("/merchant/#{@merchant.id}/bulk_discounts")
+    end
   end
 end

@@ -8,9 +8,28 @@ class BulkDiscountsController < ApplicationController
 
   end
 
+  def new
+    @merchant = Merchant.find(params[:merchant_id])
+    @discount = BulkDiscount.new
+  end
+
+  def create
+    @merchant = Merchant.find(params[:merchant_id])
+    discount = @merchant.bulk_discounts.create(bulk_discount_params)
+    redirect_to "/merchant/#{@merchant.id}/bulk_discounts"
+
+
+    # if discount.save
+      # redirect_to "/merchant/#{@merchant.id}/bulk_discounts"
+    # else
+    #   flash[:error] = "Please fill in all fields. #{error_message(bulk_discount.errors)}."
+    #   redirect_to "/merchant/#{@merchant.id}/bulk_discounts/new"
+    # end
+  end
+
   private
 
-  def _params
-    params.permit(:percentage, :minimum_quantity, :merchant_id)
+  def bulk_discount_params
+    params.require(:bulk_discount).permit(:percentage, :minimum_quantity, :merchant_id)
   end
 end
