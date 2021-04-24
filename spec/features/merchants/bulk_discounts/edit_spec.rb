@@ -24,10 +24,10 @@ RSpec.describe 'Bulk Discount Edit Page' do
     it 'shows error message if fields are blank' do
       fill_in "Percentage", with: ""
       fill_in "Minimum quantity", with: ""
-      click_button "Edit Bulk discount"
+      click_button "Update Discount"
 
-      expect(page).to have_content("Please fill in all fields. Percentage can't be blank, Minimum quantity can't be blank.")
-      expect(page).to have_button('Create Bulk discount')
+      expect(page).to have_content("Please fill in all fields.")
+      expect(page).to have_button('Update Discount')
     end
   end
 end
