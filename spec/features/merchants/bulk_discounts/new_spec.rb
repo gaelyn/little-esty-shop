@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Create new discount page' do
   before :each do
     @merchant = create(:merchant)
+    @discount = create(:bulk_discount, merchant: @merchant)
   end
 
   describe 'I click Create New Discount on index page' do
@@ -18,6 +19,14 @@ RSpec.describe 'Create new discount page' do
       expect(current_path).to eq("/merchant/#{@merchant.id}/bulk_discounts")
       expect(page).to have_content("Percentage Discount: 50% off")
       expect(page).to have_content("Quantity Threshold: 5")
+    end
+
+    it 'cannot create discount unless all fields are filled in' do
+      visit "/merchant/#{@merchant.id}/bulk_discounts/new"
+
+      click_on "Create Bulk discount"
+      expect(page).to have_content("Please fill in all fields. Percentage can't be blank, Minimum quantity can't be blank.")
+      expect(page).to have_button('Create Bulk discount')
     end
   end
 end

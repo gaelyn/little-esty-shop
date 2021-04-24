@@ -19,7 +19,7 @@ RSpec.describe 'Bulk Discount Index Page' do
       end
     end
 
-    it 'can see upcoming holidays header' do
+    it 'can see 3 upcoming holidays' do
       expect(page).to have_content(HolidayService.get_holidays[0])
       expect(page).to have_content(HolidayService.get_holidays[1])
       expect(page).to have_content(HolidayService.get_holidays[2])

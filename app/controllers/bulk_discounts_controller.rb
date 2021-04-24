@@ -15,16 +15,14 @@ class BulkDiscountsController < ApplicationController
 
   def create
     @merchant = Merchant.find(params[:merchant_id])
-    discount = @merchant.bulk_discounts.create(bulk_discount_params)
-    redirect_to "/merchant/#{@merchant.id}/bulk_discounts"
+    discount = @merchant.bulk_discounts.new(bulk_discount_params)
 
-
-    # if discount.save
-      # redirect_to "/merchant/#{@merchant.id}/bulk_discounts"
-    # else
-    #   flash[:error] = "Please fill in all fields. #{error_message(bulk_discount.errors)}."
-    #   redirect_to "/merchant/#{@merchant.id}/bulk_discounts/new"
-    # end
+    if discount.save
+      redirect_to "/merchant/#{@merchant.id}/bulk_discounts"
+    else
+      flash[:error] = "Please fill in all fields. #{error_message(discount.errors)}."
+      redirect_to "/merchant/#{@merchant.id}/bulk_discounts/new"
+    end
   end
 
   private
