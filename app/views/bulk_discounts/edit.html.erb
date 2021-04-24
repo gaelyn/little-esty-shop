@@ -1,0 +1,10 @@
+<h2>Edit Discount</h2>
+<%= form_with model: [@merchant, @discount], class: :model do |f| %>
+  <%= f.label :percentage %>
+  <%= f.number_field :percentage, step: 0.01 %>
+
+  <%= f.label :minimum_quantity %>
+  <%= f.number_field :minimum_quantity %>
+
+  <%= f.submit "Update Discount"%>
+<% end %>
