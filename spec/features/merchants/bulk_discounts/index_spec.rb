@@ -20,7 +20,9 @@ RSpec.describe 'Bulk Discount Index Page' do
     end
 
     it 'can see upcoming holidays header' do
-      #come back to this later
+      expect(page).to have_content(HolidayService.get_holidays[0])
+      expect(page).to have_content(HolidayService.get_holidays[1])
+      expect(page).to have_content(HolidayService.get_holidays[2])
     end
 
     it 'can see link to create a new discount' do
@@ -37,7 +39,6 @@ RSpec.describe 'Bulk Discount Index Page' do
       click_button "Create Bulk discount"
 
       expect(current_path).to eq("/merchant/#{@merchant.id}/bulk_discounts")
-      save_and_open_page
     end
   end
 end

@@ -1,4 +1,3 @@
-
 class GithubService
   def self.get_name
     response = conn.get('/repos/ochar721/little-esty-shop')
