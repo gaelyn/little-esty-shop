@@ -3,6 +3,7 @@ class InvoiceItem < ApplicationRecord
   belongs_to :invoice
   has_one :merchant, through: :item
   has_many :transactions, through: :invoice
+  has_many :bulk_discounts, through: :item
 
   validates_presence_of :quantity,
                         :unit_price,
@@ -32,4 +33,17 @@ class InvoiceItem < ApplicationRecord
     order('invoices.created_at').
     where.not(status: 2)
   end
+
+######## NEED TEST ###########
+  def self.discount_percent
+    joins(:bulk_discounts).
+    select('bulk_discounts.*', 'invoice_items.*').
+    where('bulk_discounts.minimum_quantity <= invoice_items.quantity').
+    order('bulk_discounts.percentage DESC')
+    # pluck('bulk_discounts.percentage.first')
+    # .first.percentage => 0.75
+  end
+
+  ##############################################################################
+  # InvoiceItem.joins(item: :bulk_discounts).select('bulk_discounts.*').where('invoice_items.quantity >= bulk_discounts.minimum_quantity').group('bulk_discounts.id')[0].id
 end

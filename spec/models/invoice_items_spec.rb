@@ -83,5 +83,35 @@ RSpec.describe InvoiceItem, type: :model do
         expect(InvoiceItem.items_not_shipped[3].id).to eq(@invoice_7.id)
       end
     end
+
+    describe '::discount_percent' do
+      it 'finds the percent discount that an item on an invoice is eligible for' do
+        @merchant2 = create(:merchant)
+
+        @item1 = create(:item, merchant: @merchant2, status: 0)
+        @item2 = create(:item, merchant: @merchant2, status: 0)
+        @item3 = create(:item, merchant: @merchant2, status: 1)
+        @item4 = create(:item, merchant: @merchant2, status: 1)
+        @item5 = create(:item, merchant: @merchant2, status: 1)
+        @item6 = create(:item, merchant: @merchant2, status: 1)
+
+        @customer = create(:customer)
+
+        @invoice = Invoice.create!(status: 0, customer_id: @customer.id)
+
+        @invoice_item_1 = InvoiceItem.create!(item_id: @item1.id, invoice_id: @invoice.id, quantity: 1, unit_price: 10, status: 1)
+        @invoice_item_2 = InvoiceItem.create!(item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 10, status: 1)
+        @invoice_item_3 = InvoiceItem.create!(item_id: @item3.id, invoice_id: @invoice.id, quantity: 3, unit_price: 10, status: 1)
+        @invoice_item_4 = InvoiceItem.create!(item_id: @item4.id, invoice_id: @invoice.id, quantity: 5, unit_price: 10, status: 2)
+        @invoice_item_5 = InvoiceItem.create!(item_id: @item5.id, invoice_id: @invoice.id, quantity: 10, unit_price: 10, status: 2)
+        @invoice_item_6 = InvoiceItem.create!(item_id: @item6.id, invoice_id: @invoice.id, quantity: 11, unit_price: 10, status: 0)
+
+        @discount1 = @merchant2.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 10)
+        @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
+        @discount3 = @merchant2.bulk_discounts.create!(percentage: 0.1, minimum_quantity: 1)
+
+        require "pry"; binding.pry
+      end
+    end
   end
 end

@@ -78,4 +78,16 @@ RSpec.describe Merchant, type: :model do
       end
     end
   end
+
+  describe 'instance_methods' do
+    describe '.minimum_discount_quantity_threshold' do
+      it 'can find minimum threshold number for all discounts' do
+        @merchant1 = create(:merchant)
+        @discount_1 = @merchant1.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 5)
+        @discount_2 = @merchant1.bulk_discounts.create!(percentage: 0.3, minimum_quantity: 3)
+        @discount_3 = @merchant1.bulk_discounts.create!(percentage: 0.1, minimum_quantity: 10)
+        expect(@merchant1.minimum_discount_quantity_threshold).to eq(@discount_2.minimum_quantity)
+      end
+    end
+  end
 end
