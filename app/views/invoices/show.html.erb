@@ -5,8 +5,8 @@
 <h2>Invoice #<%= @invoice.id %></h2>
 <p>Status: <%= @invoice.status %></p>
 <p>Created on: <%= @invoice.created_at.strftime("%A, %B %d, %Y") %></p>
-<p>Total Revenue: $<%= @invoice_items.total_revenue %></p>
-<p>Total Revenue with Discounts Applied: $<%= @discount %></p>
+<p>Total Revenue: <%= currency(@invoice_items.total_revenue) %></p>
+<p>Total Revenue with Discounts Applied: <%= currency(@discount) %></p>
 
 <h3>Customer:</h3>
 <p><%= @invoice.customer.first_name %> <%= @invoice.customer.last_name %></p>
@@ -16,7 +16,7 @@
   <div id="invoice_item-<%= invoice_item.id %>">
     <p>Item Name: <%= invoice_item.item.name %></p>
     <p>Quantity: <%= invoice_item.quantity %></p>
-    <p>Unit Price: <%= invoice_item.unit_price %></p>
+    <p>Unit Price: <%= currency(invoice_item.unit_price) %></p>
     <% if @invoice_items.discount_percent.include?(invoice_item) %>
       <p>Discount Applied: <%= link_to "#{invoice_item.find_discount_id}", "/merchant/#{@merchant.id}/bulk_discounts/#{invoice_item.find_discount_id}", method: :get %></p>
     <% end %>
