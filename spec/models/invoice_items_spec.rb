@@ -83,5 +83,191 @@ RSpec.describe InvoiceItem, type: :model do
         expect(InvoiceItem.items_not_shipped[3].id).to eq(@invoice_7.id)
       end
     end
+
+    describe '::discount_percent' do
+      it 'finds the percent discount that an item on an invoice is eligible for' do
+        @merchant2 = create(:merchant)
+
+        @item1 = create(:item, merchant: @merchant2, status: 0)
+        @item2 = create(:item, merchant: @merchant2, status: 0)
+        @item3 = create(:item, merchant: @merchant2, status: 1)
+        @item4 = create(:item, merchant: @merchant2, status: 1)
+        @item5 = create(:item, merchant: @merchant2, status: 1)
+        @item6 = create(:item, merchant: @merchant2, status: 1)
+
+        @customer = create(:customer)
+
+        @invoice = Invoice.create!(status: 0, customer_id: @customer.id)
+
+        @invoice_item_1 = InvoiceItem.create!(item_id: @item1.id, invoice_id: @invoice.id, quantity: 1, unit_price: 10, status: 1)
+        @invoice_item_2 = InvoiceItem.create!(item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 10, status: 1)
+        @invoice_item_3 = InvoiceItem.create!(item_id: @item3.id, invoice_id: @invoice.id, quantity: 3, unit_price: 10, status: 1)
+        @invoice_item_4 = InvoiceItem.create!(item_id: @item4.id, invoice_id: @invoice.id, quantity: 5, unit_price: 10, status: 2)
+        @invoice_item_5 = InvoiceItem.create!(item_id: @item5.id, invoice_id: @invoice.id, quantity: 10, unit_price: 10, status: 2)
+        @invoice_item_6 = InvoiceItem.create!(item_id: @item6.id, invoice_id: @invoice.id, quantity: 11, unit_price: 10, status: 0)
+
+        @discount1 = @merchant2.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 10)
+        @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
+
+        @invoice_items = @merchant2.invoice_items
+
+        expect(@invoice_items.discount_percent.to_a.count).to eq(3)
+        expect(@invoice_items.discount_percent[0].percent).to eq(@discount2.percentage)
+        expect(@invoice_items.discount_percent[1].percent).to eq(@discount1.percentage)
+        expect(@invoice_items.discount_percent[2].percent).to eq(@discount1.percentage)
+      end
+    end
+
+    describe '::discounted_revenue' do
+      it 'finds the adjusted revenue for items eligible for discounts' do
+        @merchant2 = create(:merchant)
+
+        @item1 = create(:item, merchant: @merchant2, status: 0)
+        @item2 = create(:item, merchant: @merchant2, status: 0)
+        @item3 = create(:item, merchant: @merchant2, status: 1)
+        @item4 = create(:item, merchant: @merchant2, status: 1)
+        @item5 = create(:item, merchant: @merchant2, status: 1)
+        @item6 = create(:item, merchant: @merchant2, status: 1)
+
+        @customer = create(:customer)
+
+        @invoice = Invoice.create!(status: 0, customer_id: @customer.id)
+
+        @invoice_item_1 = InvoiceItem.create!(item_id: @item1.id, invoice_id: @invoice.id, quantity: 1, unit_price: 10, status: 1)
+        @invoice_item_2 = InvoiceItem.create!(item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 10, status: 1)
+        @invoice_item_3 = InvoiceItem.create!(item_id: @item3.id, invoice_id: @invoice.id, quantity: 3, unit_price: 10, status: 1)
+        @invoice_item_4 = InvoiceItem.create!(item_id: @item4.id, invoice_id: @invoice.id, quantity: 5, unit_price: 10, status: 2)
+        @invoice_item_5 = InvoiceItem.create!(item_id: @item5.id, invoice_id: @invoice.id, quantity: 10, unit_price: 10, status: 2)
+        @invoice_item_6 = InvoiceItem.create!(item_id: @item6.id, invoice_id: @invoice.id, quantity: 11, unit_price: 10, status: 0)
+
+        @discount1 = @merchant2.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 10)
+        @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
+
+        expect(InvoiceItem.discounted_revenue).to eq(142.5)
+      end
+    end
+
+    describe '::non_eligible_invoice_items' do
+      it 'finds the total revenue for items not eligible for discounts' do
+        @merchant2 = create(:merchant)
+
+        @item1 = create(:item, merchant: @merchant2, status: 0)
+        @item2 = create(:item, merchant: @merchant2, status: 0)
+        @item3 = create(:item, merchant: @merchant2, status: 1)
+        @item4 = create(:item, merchant: @merchant2, status: 1)
+        @item5 = create(:item, merchant: @merchant2, status: 1)
+        @item6 = create(:item, merchant: @merchant2, status: 1)
+
+        @customer = create(:customer)
+
+        @invoice = Invoice.create!(status: 0, customer_id: @customer.id)
+
+        @invoice_item_1 = InvoiceItem.create!(item_id: @item1.id, invoice_id: @invoice.id, quantity: 1, unit_price: 10, status: 1)
+        @invoice_item_2 = InvoiceItem.create!(item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 10, status: 1)
+        @invoice_item_3 = InvoiceItem.create!(item_id: @item3.id, invoice_id: @invoice.id, quantity: 3, unit_price: 10, status: 1)
+        @invoice_item_4 = InvoiceItem.create!(item_id: @item4.id, invoice_id: @invoice.id, quantity: 5, unit_price: 10, status: 2)
+        @invoice_item_5 = InvoiceItem.create!(item_id: @item5.id, invoice_id: @invoice.id, quantity: 10, unit_price: 10, status: 2)
+        @invoice_item_6 = InvoiceItem.create!(item_id: @item6.id, invoice_id: @invoice.id, quantity: 11, unit_price: 10, status: 0)
+
+        @discount1 = @merchant2.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 10)
+        @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
+
+        expect(@merchant2.invoice_items.non_eligible_invoice_items).to eq(60)
+      end
+    end
+
+    describe '::minimum_discount_quantity_threshold' do
+      it 'finds the lowest threshhold for all bulk_discounts' do
+        @merchant2 = create(:merchant)
+
+        @item1 = create(:item, merchant: @merchant2, status: 0)
+        @item2 = create(:item, merchant: @merchant2, status: 0)
+        @item3 = create(:item, merchant: @merchant2, status: 1)
+        @item4 = create(:item, merchant: @merchant2, status: 1)
+        @item5 = create(:item, merchant: @merchant2, status: 1)
+        @item6 = create(:item, merchant: @merchant2, status: 1)
+
+        @customer = create(:customer)
+
+        @invoice = Invoice.create!(status: 0, customer_id: @customer.id)
+
+        @invoice_item_1 = InvoiceItem.create!(item_id: @item1.id, invoice_id: @invoice.id, quantity: 1, unit_price: 10, status: 1)
+        @invoice_item_2 = InvoiceItem.create!(item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 10, status: 1)
+        @invoice_item_3 = InvoiceItem.create!(item_id: @item3.id, invoice_id: @invoice.id, quantity: 3, unit_price: 10, status: 1)
+        @invoice_item_4 = InvoiceItem.create!(item_id: @item4.id, invoice_id: @invoice.id, quantity: 5, unit_price: 10, status: 2)
+        @invoice_item_5 = InvoiceItem.create!(item_id: @item5.id, invoice_id: @invoice.id, quantity: 10, unit_price: 10, status: 2)
+        @invoice_item_6 = InvoiceItem.create!(item_id: @item6.id, invoice_id: @invoice.id, quantity: 11, unit_price: 10, status: 0)
+
+        @discount1 = @merchant2.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 10)
+        @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
+
+        expect(InvoiceItem.minimum_discount_quantity_threshold).to eq(5)
+      end
+    end
+
+    describe '::total_revenue_with_discount' do
+      it 'finds the total revenue for items with and without discounts applied' do
+        @merchant2 = create(:merchant)
+
+        @item1 = create(:item, merchant: @merchant2, status: 0)
+        @item2 = create(:item, merchant: @merchant2, status: 0)
+        @item3 = create(:item, merchant: @merchant2, status: 1)
+        @item4 = create(:item, merchant: @merchant2, status: 1)
+        @item5 = create(:item, merchant: @merchant2, status: 1)
+        @item6 = create(:item, merchant: @merchant2, status: 1)
+
+        @customer = create(:customer)
+
+        @invoice = Invoice.create!(status: 0, customer_id: @customer.id)
+
+        @invoice_item_1 = InvoiceItem.create!(item_id: @item1.id, invoice_id: @invoice.id, quantity: 1, unit_price: 10, status: 1)
+        @invoice_item_2 = InvoiceItem.create!(item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 10, status: 1)
+        @invoice_item_3 = InvoiceItem.create!(item_id: @item3.id, invoice_id: @invoice.id, quantity: 3, unit_price: 10, status: 1)
+        @invoice_item_4 = InvoiceItem.create!(item_id: @item4.id, invoice_id: @invoice.id, quantity: 5, unit_price: 10, status: 2)
+        @invoice_item_5 = InvoiceItem.create!(item_id: @item5.id, invoice_id: @invoice.id, quantity: 10, unit_price: 10, status: 2)
+        @invoice_item_6 = InvoiceItem.create!(item_id: @item6.id, invoice_id: @invoice.id, quantity: 11, unit_price: 10, status: 0)
+
+        @discount1 = @merchant2.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 10)
+        @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
+
+        @invoice_items = @merchant2.invoice_items
+        expect(@invoice_items.total_revenue_with_discount).to eq(202.5)
+      end
+    end
+  end
+
+  describe 'instance methods' do
+    describe '.find_discount_id' do
+      it 'can find the id of the discount that was applied' do
+        @merchant2 = create(:merchant)
+
+        @item1 = create(:item, merchant: @merchant2, status: 0)
+        @item2 = create(:item, merchant: @merchant2, status: 0)
+        @item3 = create(:item, merchant: @merchant2, status: 1)
+        @item4 = create(:item, merchant: @merchant2, status: 1)
+        @item5 = create(:item, merchant: @merchant2, status: 1)
+        @item6 = create(:item, merchant: @merchant2, status: 1)
+
+        @customer = create(:customer)
+
+        @invoice = Invoice.create!(status: 0, customer_id: @customer.id)
+
+        @invoice_item_1 = InvoiceItem.create!(item_id: @item1.id, invoice_id: @invoice.id, quantity: 1, unit_price: 10, status: 1)
+        @invoice_item_2 = InvoiceItem.create!(item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 10, status: 1)
+        @invoice_item_3 = InvoiceItem.create!(item_id: @item3.id, invoice_id: @invoice.id, quantity: 3, unit_price: 10, status: 1)
+        @invoice_item_4 = InvoiceItem.create!(item_id: @item4.id, invoice_id: @invoice.id, quantity: 5, unit_price: 10, status: 2)
+        @invoice_item_5 = InvoiceItem.create!(item_id: @item5.id, invoice_id: @invoice.id, quantity: 10, unit_price: 10, status: 2)
+        @invoice_item_6 = InvoiceItem.create!(item_id: @item6.id, invoice_id: @invoice.id, quantity: 11, unit_price: 10, status: 0)
+
+        @discount1 = @merchant2.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 10)
+        @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
+
+        @invoice_items = @merchant2.invoice_items
+
+        expect(@invoice_item_4.find_discount_id).to eq(@discount2.id)
+        expect(@invoice_item_5.find_discount_id).to eq(@discount1.id)
+        expect(@invoice_item_6.find_discount_id).to eq(@discount1.id)
+      end
+    end
   end
 end

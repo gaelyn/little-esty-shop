@@ -6,6 +6,7 @@
 <p>Status: <%= @invoice.status %></p>
 <p>Created on: <%= @invoice.created_at.strftime("%A, %B %d, %Y") %></p>
 <p>Total Revenue: $<%= @invoice_items.total_revenue %></p>
+<p>Total Revenue with Discounts Applied: $<%= @discount %></p>
 
 <h3>Customer:</h3>
 <p><%= @invoice.customer.first_name %> <%= @invoice.customer.last_name %></p>
@@ -16,6 +17,9 @@
     <p>Item Name: <%= invoice_item.item.name %></p>
     <p>Quantity: <%= invoice_item.quantity %></p>
     <p>Unit Price: <%= invoice_item.unit_price %></p>
+    <% if @invoice_items.discount_percent.include?(invoice_item) %>
+      <p>Discount Applied: <%= link_to "#{invoice_item.find_discount_id}", "/merchant/#{@merchant.id}/bulk_discounts/#{invoice_item.find_discount_id}", method: :get %></p>
+    <% end %>
 
     <%= form_with url: "/merchant/#{@merchant.id}/invoices/#{@invoice.id}/invoice_items/#{invoice_item.id}", method: :patch do |form| %>
       <%= form.label :status, "Status: " %>
