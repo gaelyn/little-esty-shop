@@ -34,7 +34,6 @@ class InvoiceItem < ApplicationRecord
     where.not(status: 2)
   end
 
-######## NEED TEST ###########
   def self.discount_percent
     joins(:bulk_discounts).
     where('bulk_discounts.minimum_quantity <= invoice_items.quantity').
@@ -48,6 +47,7 @@ class InvoiceItem < ApplicationRecord
      end
   end
 
+  ######## NEED TEST ###########
   def self.minimum_discount_quantity_threshold
     joins(:bulk_discounts).minimum(:minimum_quantity)
   end
