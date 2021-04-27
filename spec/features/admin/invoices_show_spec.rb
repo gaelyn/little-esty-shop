@@ -9,6 +9,9 @@ RSpec.describe "Admin Invoices Show Page" do
     @customer = create(:customer)
     @invoice = Invoice.create!(status: 0, customer_id: @customer.id)
     @invoice_item_1 = InvoiceItem.create!(item_id: @item_1.id, invoice_id: @invoice.id, quantity: 3, unit_price: 13, status: 0)
+    @invoice_item_2 = InvoiceItem.create!(item_id: @item_2.id, invoice_id: @invoice.id, quantity: 5, unit_price: 13, status: 0)
+    @invoice_item_3 = InvoiceItem.create!(item_id: @item_3.id, invoice_id: @invoice.id, quantity: 10, unit_price: 13, status: 0)
+    @discount = @merchant.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 8)
     visit "/admin/invoices/#{@invoice.id}"
   end
 
@@ -65,5 +68,9 @@ RSpec.describe "Admin Invoices Show Page" do
     within("#invoice-#{@invoice.id}") do
       expect(page.find("option[selected = selected]").text).to eq('cancelled')
     end
+  end
+
+  it 'can show total revenue including bulk discounts' do
+    expect(page).to have_content('Total Revenue with Discounts Applied: $169.00')
   end
 end
