@@ -87,6 +87,15 @@ class InvoiceItem < ApplicationRecord
     self.eligible_invoice_items + self.non_eligible_invoice_items
   end
 
+  def find_discount_id
+    q = self.quantity
+    self.bulk_discounts.where('minimum_quantity <= ?', q).
+    select('id', 'percentage').
+    order('percentage desc').
+    first.
+    id
+  end
+
   ##############################################################################
   # InvoiceItem.joins(item: :bulk_discounts).select('bulk_discounts.*').where('invoice_items.quantity >= bulk_discounts.minimum_quantity').group('bulk_discounts.id')[0].id
 end
