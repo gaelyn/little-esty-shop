@@ -12,7 +12,7 @@ class Invoice < ApplicationRecord
 
   scope :incomplete_invoices, -> { includes(:invoice_items).where.not(status: 2).distinct.order(:created_at)}
 
-  # KLAUDIAS METHODS
+
   # def discounted_rev
   #   invoice_items.
   #   joins(:bulk_discounts).

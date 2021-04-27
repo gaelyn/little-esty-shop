@@ -110,7 +110,13 @@ RSpec.describe InvoiceItem, type: :model do
         @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
         @discount3 = @merchant2.bulk_discounts.create!(percentage: 0.1, minimum_quantity: 1)
 
-        require "pry"; binding.pry
+        @discounted_items = @merchant2.eligible_invoice_items.discount_percent
+        @discounted_items.discounted_revenue
+        # @other_items = @merchant2.non_eligible_invoice_items.total_revenue
+        # @inv_items.sum do |item|
+        #   (item.unit_price * (1 - item.percent)) * item.quantity
+        # end
+        # require "pry"; binding.pry
       end
     end
   end
