@@ -5,7 +5,7 @@
 <% @discounts.each do |discount| %>
   <section id="discount-<%= discount.id %>">
     <p>
-      * Percentage Discount: <%= (discount.percentage * 100).to_i %>% off,
+      * Percentage Discount: <%= percent_to_integer(discount.percentage) %>% off,
       Quantity Threshold: <%= discount.minimum_quantity %>
       <%= link_to "See Discount", merchant_bulk_discount_path(@merchant.id, discount.id), method: :get %>
       <%= button_to "Delete Discount", merchant_bulk_discount_path(@merchant.id, discount.id), method: :delete %>
