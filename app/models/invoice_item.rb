@@ -57,17 +57,8 @@ class InvoiceItem < ApplicationRecord
     sum('invoice_items.quantity*invoice_items.unit_price')
   end
 
-  ######## NEED TEST ###########
-  # def self.eligible_invoice_items
-  #   threshold = self.minimum_discount_quantity_threshold
-  #   where('invoice_items.quantity >= ?', threshold).
-  #   discounted_revenue
-  # end
-
-
   def self.total_revenue_with_discount
     self.discounted_revenue + self.non_eligible_invoice_items
-    # self.eligible_invoice_items + self.non_eligible_invoice_items
   end
 
   def find_discount_id
@@ -78,7 +69,4 @@ class InvoiceItem < ApplicationRecord
     first.
     id
   end
-
-  ##############################################################################
-  # InvoiceItem.joins(item: :bulk_discounts).select('bulk_discounts.*').where('invoice_items.quantity >= bulk_discounts.minimum_quantity').group('bulk_discounts.id')[0].id
 end

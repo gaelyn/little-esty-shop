@@ -109,10 +109,12 @@ RSpec.describe InvoiceItem, type: :model do
         @discount1 = @merchant2.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 10)
         @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
 
-        expect(InvoiceItem.discount_percent.to_a.count).to eq(3)
-        expect(InvoiceItem.discount_percent[0].percent).to eq(@discount2.percentage)
-        expect(InvoiceItem.discount_percent[1].percent).to eq(@discount1.percentage)
-        expect(InvoiceItem.discount_percent[2].percent).to eq(@discount1.percentage)
+        @invoice_items = @merchant2.invoice_items
+
+        expect(@invoice_items.discount_percent.to_a.count).to eq(3)
+        expect(@invoice_items.discount_percent[0].percent).to eq(@discount2.percentage)
+        expect(@invoice_items.discount_percent[1].percent).to eq(@discount1.percentage)
+        expect(@invoice_items.discount_percent[2].percent).to eq(@discount1.percentage)
       end
     end
 
