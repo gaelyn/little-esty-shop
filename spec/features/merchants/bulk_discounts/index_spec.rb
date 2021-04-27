@@ -26,8 +26,6 @@ RSpec.describe 'Bulk Discount Index Page' do
       expect(page).to have_content(HolidayService.get_holidays[1][:date])
       expect(page).to have_content(HolidayService.get_holidays[2][:localName])
       expect(page).to have_content(HolidayService.get_holidays[2][:date])
-      # expect(page).to have_content(HolidayService.get_holidays[1])
-      # expect(page).to have_content(HolidayService.get_holidays[2])
     end
 
     it 'can see link to create a new discount' do
