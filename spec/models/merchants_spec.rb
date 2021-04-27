@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Merchant, type: :model do
   describe 'relationships' do
     it { should have_many(:items) }
+    it { should have_many(:bulk_discounts) }
     it { should have_many(:invoice_items).through(:items) }
     it { should have_many(:invoices).through(:invoice_items) }
     it { should have_many(:transactions).through(:invoices) }
@@ -75,18 +76,6 @@ RSpec.describe Merchant, type: :model do
     describe '::top_merchants_revenue' do
       it 'shows merchants who created the most revenue' do
         expect(Merchant.top_merchants_revenue).to eq([@merchant3, @merchant2, @merchant4, @merchant1, @merchant5])
-      end
-    end
-  end
-
-  describe 'instance_methods' do
-    describe '.minimum_discount_quantity_threshold' do
-      it 'can find minimum threshold number for all discounts' do
-        @merchant1 = create(:merchant)
-        @discount_1 = @merchant1.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 5)
-        @discount_2 = @merchant1.bulk_discounts.create!(percentage: 0.3, minimum_quantity: 3)
-        @discount_3 = @merchant1.bulk_discounts.create!(percentage: 0.1, minimum_quantity: 10)
-        expect(@merchant1.minimum_discount_quantity_threshold).to eq(@discount_2.minimum_quantity)
       end
     end
   end

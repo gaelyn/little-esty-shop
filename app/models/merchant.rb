@@ -26,19 +26,4 @@ class Merchant < ApplicationRecord
     .order(total_revenue: :desc)
     .limit(5)
   end
-
-  def minimum_discount_quantity_threshold
-    bulk_discounts.minimum(:minimum_quantity)
-  end
-
-  ######## NEED TESTS ############
-  def eligible_invoice_items
-    threshold = self.minimum_discount_quantity_threshold
-    invoice_items.where('invoice_items.quantity >= ?', threshold)
-  end
-
-  def non_eligible_invoice_items
-    threshold = self.minimum_discount_quantity_threshold
-    invoice_items.where('invoice_items.quantity < ?', threshold)
-  end
 end
