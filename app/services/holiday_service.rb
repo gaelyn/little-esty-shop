@@ -4,7 +4,7 @@ class HolidayService
     json = JSON.parse(resp.body, symbolize_names: true)
 
     json.map do |holiday|
-      holiday[:localName]
+      holiday
     end
   end
 

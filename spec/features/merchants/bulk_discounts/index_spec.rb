@@ -10,7 +10,7 @@ RSpec.describe 'Bulk Discount Index Page' do
   describe 'I visit the discount index page' do
     it 'can see all of my bulk discounts including percentage and quantity threshold' do
       expect(page).to have_content((@discount_1.percentage * 100).to_i)
-      expect(page).to have_content(@discount_1.minimum_quantity)
+      expect(page).to have_content("Quantity Threshold: #{@discount_1.minimum_quantity}")
     end
 
     it 'can see link to each discounts show page' do
@@ -20,9 +20,12 @@ RSpec.describe 'Bulk Discount Index Page' do
     end
 
     it 'can see 3 upcoming holidays' do
-      expect(page).to have_content(HolidayService.get_holidays[0])
-      expect(page).to have_content(HolidayService.get_holidays[1])
-      expect(page).to have_content(HolidayService.get_holidays[2])
+      expect(page).to have_content(HolidayService.get_holidays[0][:localName])
+      expect(page).to have_content(HolidayService.get_holidays[0][:date])
+      expect(page).to have_content(HolidayService.get_holidays[1][:localName])
+      expect(page).to have_content(HolidayService.get_holidays[1][:date])
+      expect(page).to have_content(HolidayService.get_holidays[2][:localName])
+      expect(page).to have_content(HolidayService.get_holidays[2][:date])
     end
 
     it 'can see link to create a new discount' do
@@ -37,7 +40,7 @@ RSpec.describe 'Bulk Discount Index Page' do
         click_on("Delete Discount")
       end
       expect(page).not_to have_content(@discount_1.percentage)
-      expect(page).not_to have_content(@discount_1.minimum_quantity)
+      expect(page).not_to have_content("Quantity Threshold: #{@discount_1.minimum_quantity}")
     end
   end
 end

@@ -14,6 +14,6 @@
 <% end %>
 
 <h3>Upcoming Holidays</h3>
-<p>* <%= @holidays[0] %></p>
-<p>* <%= @holidays[1] %></p>
-<p>* <%= @holidays[2] %></p>
+<p>* <%= @holidays[0][:localName] %> on <%= @holidays[0][:date] %></p>
+<p>* <%= @holidays[1][:localName] %> on <%= @holidays[1][:date] %></p>
+<p>* <%= @holidays[2][:localName] %> on <%= @holidays[2][:date] %></p>
