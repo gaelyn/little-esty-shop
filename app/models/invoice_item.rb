@@ -36,27 +36,10 @@ class InvoiceItem < ApplicationRecord
 
 ######## NEED TEST ###########
   def self.discount_percent
-    # joins(:bulk_discounts).
-    # select('bulk_discounts.*', 'invoice_items.*').
-    # where('bulk_discounts.minimum_quantity <= invoice_items.quantity').
-    # order('bulk_discounts.percentage DESC')
-    # # pluck('bulk_discounts.percentage')
-    # # .first.percentage => 0.75
-
-    # joins(:bulk_discounts).
-    # where('bulk_discounts.minimum_quantity <= invoice_items.quantity').
-    # select('bulk_discounts.percentage', 'invoice_items.quantity', 'invoice_items.unit_price').
-    # order('bulk_discounts.percentage DESC')
-
     joins(:bulk_discounts).
     where('bulk_discounts.minimum_quantity <= invoice_items.quantity').
     group('invoice_items.id').
     select('invoice_items.*', 'MAX (bulk_discounts.percentage) as percent')
-
-
-    # The math for above method
-    # discounts = @merchant.eligible_invoice_items.discount_percent
-    # (discounts.first.unit_price * (1 - discounts.first.percentage)) * discounts.first.quantity
   end
 
   def self.discounted_revenue

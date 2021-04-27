@@ -108,19 +108,11 @@ RSpec.describe InvoiceItem, type: :model do
 
         @discount1 = @merchant2.bulk_discounts.create!(percentage: 0.5, minimum_quantity: 10)
         @discount2 = @merchant2.bulk_discounts.create!(percentage: 0.25, minimum_quantity: 5)
-        # @discount3 = @merchant2.bulk_discounts.create!(percentage: 0.1, minimum_quantity: 1)
 
-        @discounted_items = @merchant2.eligible_invoice_items.discount_percent
-        @discounted_items.discounted_revenue
-
-        # if @merchant2.invoice_items.discount_percent.include?(invcoie_item)
-        #   find_discount_id(invoice_item)
-        # else
-        #   "N/A"
-        # end
-        @invoice_item_5.find_discount_id
-
-        require "pry"; binding.pry
+        expect(InvoiceItem.discount_percent.to_a.count).to eq(3)
+        expect(InvoiceItem.discount_percent[0].percent).to eq(@discount2.percentage)
+        expect(InvoiceItem.discount_percent[1].percent).to eq(@discount1.percentage)
+        expect(InvoiceItem.discount_percent[2].percent).to eq(@discount1.percentage)
       end
     end
   end
