@@ -14,18 +14,4 @@ RSpec.describe BulkDiscount, type: :model do
     it { should validate_presence_of(:percentage) }
     it { should validate_presence_of(:minimum_quantity) }
   end
-
-  # before :each do
-  #
-  # end
-  #
-  # describe 'class methods' do
-  #   describe '#' do
-  #   end
-  # end
-  #
-  # describe 'instance methods' do
-  #   describe '.' do
-  #   end
-  # end
 end
