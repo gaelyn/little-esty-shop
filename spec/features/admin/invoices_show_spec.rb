@@ -71,7 +71,6 @@ RSpec.describe "Admin Invoices Show Page" do
   end
 
   it 'can show total revenue including bulk discounts' do
-    save_and_open_page
-    expect(page).to have_content('Total Revenue with Discounts Applied: $169.00')
+    expopenect(page).to have_content('Total Revenue with Discounts Applied: $169.00')
   end
 end
