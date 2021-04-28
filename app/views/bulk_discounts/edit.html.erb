@@ -1,3 +1,7 @@
+<%= link_to "My Dashboard", "/merchant/#{@merchant.id}/dashboard" %> |
+<%= link_to "Discounts", "/merchant/#{@merchant.id}/bulk_discounts" %> |
+<%= link_to "Go Back to Discount", "/merchant/#{@merchant.id}/bulk_discounts/#{@discount.id}" %>
+
 <h2>Edit Discount</h2>
 <%= form_with model: [@merchant, @discount], class: :model do |f| %>
   <%= f.label :percentage %>

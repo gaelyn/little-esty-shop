@@ -39,7 +39,7 @@ RSpec.describe Customer, type: :model do
       InvoiceItem.create!(item_id: @item_2.id, invoice_id: @invoice_4.id, quantity: 10, unit_price: 5, status: 2)
       InvoiceItem.create!(item_id: @item_2.id, invoice_id: @invoice_5.id, quantity: 1, unit_price: 2, status: 2)
       InvoiceItem.create!(item_id: @item_2.id, invoice_id: @invoice_6.id, quantity: 3, unit_price: 5, status: 2)
-      
+
       @transaction = Transaction.create!(credit_card_number: "123456789", credit_card_expiration_date: 1021, result: "success", invoice_id: "#{@invoice_1.id}")
       @transaction = Transaction.create!(credit_card_number: "123456789", credit_card_expiration_date: 1021, result: "success", invoice_id: "#{@invoice_2.id}")
       @transaction = Transaction.create!(credit_card_number: "123456789", credit_card_expiration_date: 1021, result: "success", invoice_id: "#{@invoice_3.id}")
@@ -50,7 +50,6 @@ RSpec.describe Customer, type: :model do
 
     describe "::top_five_customers" do
       it 'lists the top five customers for a merchant' do
-
         expect(Customer.top_five_customers.to_a).to eq([@customer, @customer_1, @customer_2, @customer_3, @customer_4])
         expect(Customer.top_five_customers.to_a).to_not eq([@customer_5])
       end

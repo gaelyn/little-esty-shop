@@ -1,19 +1,8 @@
 class BulkDiscountsController < ApplicationController
-  # def index
-  #   @merchant = Merchant.find(params[:merchant_id])
-  #   @discounts = BulkDiscount.all
-  #   if Rails.env.test?
-  #     # Mock data to avoid API throttling limits
-  #     @holidays = ["Memorial Day", "Independence Day", "Labor Day"]
-  #   else
-  #     @holidays = HolidayService.get_holidays.take(3)
-  #   end
-  # end
-
   def index
     @merchant = Merchant.find(params[:merchant_id])
     @discounts = BulkDiscount.all
-    @holidays = HolidayService.get_holidays[0..3]
+    @holidays = HolidayService.get_holidays
   end
 
   def show

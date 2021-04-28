@@ -1,3 +1,6 @@
+<%= link_to "My Dashboard", "/merchant/#{@merchant.id}/dashboard" %> |
+<%= link_to "Discounts", "/merchant/#{@merchant.id}/bulk_discounts" %>
+
 <h5>Discount: <%= (@discount.percentage * 100).to_i %>% off</h5>
 <h5>Quantity Threshold: <%= @discount.minimum_quantity %></h5>
 <p><%= link_to "Edit Discount", edit_merchant_bulk_discount_path(@merchant, @discount), method: :get %></p>
