@@ -15,7 +15,7 @@
 
 <p>Created on: <%= @invoice.created_at.strftime("%A, %B %d, %Y") %></p>
 <p>Total Revenue: <%= currency(@invoice_items.total_revenue) %></p>
-<p>Total Revenue with Discounts Applied: <%= currency(@invoice_items.total_revenue) %></p>
+<p>Total Revenue with Discounts Applied: <%= currency(@invoice_items.total_revenue_with_discount) %></p>
 
 <h3>Customer:</h3>
 <p><%= @invoice.customer.first_name %> <%= @invoice.customer.last_name %></p>
